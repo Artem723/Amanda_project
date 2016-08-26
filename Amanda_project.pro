@@ -16,10 +16,18 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     cloth.cpp \
-    connectdialog.cpp
+    connectdialog.cpp \
+    cameraview.cpp \
+    map.cpp \
+    coordinates.cpp \
+    metaldata.cpp
 
 HEADERS  += mainwindow.h \
     cloth.h \
-    connectdialog.h
+    connectdialog.h \
+    cameraview.h \
+    map.h \
+    coordinates.h \
+    metaldata.h
 
 FORMS    += mainwindow.ui

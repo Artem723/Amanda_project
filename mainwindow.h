@@ -5,6 +5,11 @@
 #include <QMainWindow>
 #include <QTcpSocket>
 #include <QKeyEvent>
+#include "cameraview.h"
+#include <QDataStream>
+#include "map.h"
+#include "coordinates.h"
+#include "metaldata.h"
 
 namespace Ui {
 class MainWindow;
@@ -61,6 +66,14 @@ private slots:
     void onSock_Metal_ReadyRead();
     void onSock_Metal_DisplayError(QAbstractSocket::SocketError socketError);
 
+
+    void onSock_Camera_Connected();
+    void onSock_Camera_Disconnected();
+    //сигнал readyRead вызывается, когда сокет получает пакет (который может быть лишь частью отправленых данных) байтов
+    void onSock_Camera_ReadyRead();
+    void onSock_Camera_DisplayError(QAbstractSocket::SocketError socketError);
+
+
     void on_connect_Button_Wheel_clicked();
 
     void on_connect_Button_Metal_clicked();
@@ -68,6 +81,12 @@ private slots:
     void on_action_3_triggered();
 
     void on_action_4_triggered();
+
+    void on_connect_Button_Camera_clicked();
+
+    void on_pushButton_2_clicked();
+
+    void on_actionMap_triggered();
 
 private:
     Ui::MainWindow *ui;
@@ -79,9 +98,13 @@ private:
 
     static const int PORT_WHEEL = 51000; //номер порта сервера управления роботом
     static const int PORT_METAL = 51001;//номер порта сервера metal_info
+    static const int PORT_CAMERA = 51002;
+
     QTcpSocket* sock_metal;
 
     QTcpSocket* sock_wheel;
+
+    QTcpSocket* sock_camera;
 
     QString read_metal;
 
@@ -90,7 +113,19 @@ private:
     double distance(double,double,double,double);
     bool isConnect;
     bool zalip;
+//
+    CameraView* camView;
+    QFile camFile;
+    QDataStream* wdata;
+    int countCamFile;
 
+    QByteArray* img;
+    Map *map;
+
+    MetalData* m;
+
+
+//
 protected:
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);

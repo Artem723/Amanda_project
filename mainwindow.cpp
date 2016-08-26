@@ -17,10 +17,14 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+
+    img = new QByteArray();
     ui->setupUi(this);
     clth = new Cloth(this);
+    camView = new CameraView(this);
     //clth->setBaseSize(2000,2000);
     ui->verticalLayout->addWidget(clth);
+    ui->horizontalLayout_3->addWidget(camView);
 
     connect(ui->action_2,SIGNAL(triggered()),this,SLOT(dialog()));
 //    point d[3];
@@ -53,9 +57,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
         ui->label_14->setStyleSheet("background-color:rgb(255,0,0);");
         ui->label_15->setStyleSheet("background-color:rgb(255,0,0);");
+        ui->label->setStyleSheet("background-color:rgb(255,0,0);");
 
         sock_wheel = new QTcpSocket(this);
         sock_metal = new QTcpSocket(this);
+        sock_camera = new QTcpSocket(this);
+
     connect(sock_wheel, SIGNAL(readyRead()), this, SLOT(onSock_Wheel_ReadyRead()));
     connect(sock_wheel, SIGNAL(connected()), this, SLOT(onSock_Wheel_Connected()));
     connect(sock_wheel, SIGNAL(disconnected()), this, SLOT(onSock_Wheel_Disconnected()));
@@ -66,11 +73,23 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(sock_metal, SIGNAL(disconnected()), this, SLOT(onSock_Metal_Disconnected()));
     connect(sock_metal, SIGNAL(error(QAbstractSocket::SocketError)),this, SLOT(onSock_Metal_DisplayError(QAbstractSocket::SocketError)));
 
+
+    connect(sock_camera, SIGNAL(readyRead()), this, SLOT(onSock_Camera_ReadyRead()));
+    connect(sock_camera, SIGNAL(connected()), this, SLOT(onSock_Camera_Connected()));
+    connect(sock_camera, SIGNAL(disconnected()), this, SLOT(onSock_Camera_Disconnected()));
+    connect(sock_camera, SIGNAL(error(QAbstractSocket::SocketError)),this, SLOT(onSock_Camera_DisplayError(QAbstractSocket::SocketError)));
+
     host_name = "";
     read_metal = "";
 
     isConnect = false;
     zalip = false;
+    countCamFile = 0;
+    map = NULL;
+
+
+
+
 
 }
 
@@ -78,6 +97,7 @@ MainWindow::~MainWindow()
 {
 
     clth->deleteLater();
+    map->deleteLater();
     delete ui;
 }
 
@@ -343,6 +363,7 @@ void MainWindow::dialog()
     //sok_wheel->connectToHost(host_name, PORT_WHEEL);
     ui->connect_Button_Wheel->setEnabled(true);
     ui->connect_Button_Metal->setEnabled(true);
+    ui->connect_Button_Camera->setEnabled(true);
 
 
 
@@ -582,6 +603,7 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
     if(event->isAutoRepeat())
         return;
     qDebug()<<"keyRelease";
+    qDebug()<<(sock_wheel->state());
     if(sock_wheel->state() == QAbstractSocket::ConnectedState)
    //if(isConnect)
     {////ConnectedState
@@ -813,4 +835,133 @@ void MainWindow::on_action_4_triggered()
     if (path.isEmpty())
         return;
     clth->saveAsImage(path);
+}
+
+
+void MainWindow::onSock_Camera_Connected()
+{
+    ui->label->setStyleSheet("background-color:rgb(0,255,0);");
+    ui->connect_Button_Camera->setText("disconnect");
+    ui->pushButton_2->setEnabled(true);
+
+
+
+
+}
+void MainWindow::onSock_Camera_Disconnected()
+{
+    qDebug()<<"Disconnect Camera";
+    ui->label->setStyleSheet("background-color:rgb(255,0,0);");
+    ui->connect_Button_Camera->setText("connect");
+    ui->pushButton_2->setEnabled(false);
+}
+void MainWindow::onSock_Camera_DisplayError(QAbstractSocket::SocketError socketError)
+{
+    switch (socketError) {
+    case QAbstractSocket::RemoteHostClosedError:
+        QMessageBox::information(this, "Error", "RemoteHostClosedError");
+        break;
+    case QAbstractSocket::HostNotFoundError:
+        QMessageBox::information(this, "Error", "The host was not found");
+        break;
+    case QAbstractSocket::ConnectionRefusedError:
+        QMessageBox::information(this, "Error", "The connection was refused by the peer.");
+        break;
+    default:
+        QMessageBox::information(this, "Error", "The following error occurred: "+sock_camera->errorString());
+    }
+}
+void MainWindow::onSock_Camera_ReadyRead()
+{
+    //QByteArray dat;
+
+
+    img->append(sock_camera->readAll());
+
+    int pos=0;
+    if((pos = img->indexOf("##$$$$##"))!=-1)
+    {
+        qDebug()<<"1--"<<img->length();
+        QImage image;
+        if(!image.loadFromData(img->left(pos)))
+        {
+            //QMessageBox::information(this, "Error", "can't load image.");
+        }
+        camView->drowImage(image);
+        qDebug()<<"pos--"<<pos;
+        qDebug()<<"temp--"<<((img->length())-(pos+8));
+        QByteArray temp=img->right(img->length()-(pos+8));
+        delete img;
+        img = new QByteArray();
+         img->append(temp);
+         qDebug()<<"2--"<<img->length();
+        ///!!!
+    }
+
+//    countCamFile++;
+//    qDebug()<<"countCamFile ="<<countCamFile;
+
+
+//    if(dat[0]==0)
+//    {
+//        camFile.close();
+//        qDebug()<<"COUNT Write to file="<<countCamFile;
+//        return;
+//    }
+
+    //wdata->writeBytes(dat);
+//    if(camFile.isOpen())camFile.write(dat);
+//    else
+//    {
+////        QMessageBox::information(this, "Write to file Error(Camera)", "File did not open.");
+////        ui->connect_Button_Camera->setText("connect");
+////        sock_camera->close();
+//    }
+
+
+
+
+
+}
+
+void MainWindow::on_connect_Button_Camera_clicked()
+{
+    if(ui->connect_Button_Camera->text() == "connect")
+    {
+       sock_camera->connectToHost(host_name, PORT_CAMERA);
+       ui->connect_Button_Camera->setText("disconnect");
+
+    }
+    else
+    {
+        sock_camera->write("exit");
+        sock_camera->close();
+        ui->connect_Button_Camera->setText("connect");
+        camFile.close();
+    }
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+//    QMessageBox ms;
+//    QString FileName = "Z:\\Image.jpg";
+//    camFile.setFileName(FileName);
+//    if (!camFile.open(QFile::WriteOnly))
+//    {
+//        ms.setInformativeText("Can't open file for write!");
+//        ms.exec();
+
+//    }
+//wdata = new QDataStream(&camFile);
+
+    sock_camera->write("Hello, give me some image :)");
+
+
+}
+
+void MainWindow::on_actionMap_triggered()
+{
+    map = new Map(this);
+    map->show();
+
 }

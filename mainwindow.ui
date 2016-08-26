@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>873</width>
+    <width>1116</width>
     <height>639</height>
    </rect>
   </property>
@@ -17,10 +17,10 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>0</y>
-      <width>741</width>
-      <height>291</height>
+      <x>0</x>
+      <y>10</y>
+      <width>911</width>
+      <height>281</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout"/>
@@ -41,8 +41,8 @@
    <widget class="QSlider" name="verticalSlider_2">
     <property name="geometry">
      <rect>
-      <x>760</x>
-      <y>0</y>
+      <x>950</x>
+      <y>10</y>
       <width>22</width>
       <height>281</height>
      </rect>
@@ -62,7 +62,7 @@
      <rect>
       <x>10</x>
       <y>300</y>
-      <width>741</width>
+      <width>911</width>
       <height>22</height>
      </rect>
     </property>
@@ -293,7 +293,7 @@
     <property name="geometry">
      <rect>
       <x>400</x>
-      <y>410</y>
+      <y>450</y>
       <width>241</width>
       <height>61</height>
      </rect>
@@ -387,7 +387,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>790</x>
+      <x>1020</x>
       <y>10</y>
       <width>71</width>
       <height>251</height>
@@ -515,7 +515,7 @@
     <property name="geometry">
      <rect>
       <x>660</x>
-      <y>410</y>
+      <y>450</y>
       <width>31</width>
       <height>23</height>
      </rect>
@@ -531,7 +531,7 @@
     <property name="geometry">
      <rect>
       <x>660</x>
-      <y>440</y>
+      <y>480</y>
       <width>31</width>
       <height>23</height>
      </rect>
@@ -547,7 +547,7 @@
     <property name="geometry">
      <rect>
       <x>360</x>
-      <y>410</y>
+      <y>450</y>
       <width>31</width>
       <height>23</height>
      </rect>
@@ -556,13 +556,77 @@
      <string>Q</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="connect_Button_Camera">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>400</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>connect</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>400</y>
+      <width>251</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Camera</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>500</y>
+      <width>131</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Get Image</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="horizontalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>740</x>
+      <y>330</y>
+      <width>371</width>
+      <height>251</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_3"/>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>873</width>
+     <width>1116</width>
      <height>21</height>
     </rect>
    </property>
@@ -579,6 +643,7 @@
      <string>&amp;Инструменты</string>
     </property>
     <addaction name="action_2"/>
+    <addaction name="actionMap"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
@@ -626,6 +691,17 @@
    </property>
    <property name="toolTip">
     <string>Сохранить карту на компьютере</string>
+   </property>
+  </action>
+  <action name="actionMap">
+   <property name="text">
+    <string>Map</string>
+   </property>
+   <property name="toolTip">
+    <string>Open the map</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+M</string>
    </property>
   </action>
  </widget>

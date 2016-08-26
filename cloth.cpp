@@ -1,4 +1,4 @@
-﻿#include "cloth.h"
+#include "cloth.h"
 #include<QPainter>
 #include<QPen>
 #include<QFont>
@@ -44,7 +44,7 @@ void Cloth::clear()
 {
     dots.clear();
     zero_dots=0;
-    max_metal = 0;	
+    max_metal = 0;
     min_metal = 1024;
 
     update();
