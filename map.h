@@ -1,3 +1,4 @@
+
 #ifndef MAP_H
 #define MAP_H
 
@@ -16,7 +17,9 @@
 #include <QMessageBox>
 #include <QByteArray>
 #include <QUrlQuery>
-#include "cloth.h"
+#include <QColor>
+
+#include "metaldata.h"
 class QNetworkReply;
 
 
@@ -30,6 +33,8 @@ private:
     QLineEdit *lineEditLon;
     QPushButton *OK_button;
     QPushButton *cancel_button;
+    QPushButton *removePointsButton;
+    QPushButton *saveButton;
     QDialogButtonBox *buttonBox;
 
     QUrl url;
@@ -39,10 +44,27 @@ private:
 
     QByteArray imgData;
 
+    static const double diffLat = 0.000774;
+    static const double diffLon = 0.001531;
+
+    Coordinates currentCoordinates;
+
+//    double minMetalValue;
+//    double maxMetalValue;
+
+    Coordinates topLeft;
+
+    double distWidth;
+    double distHeight;
+
+    bool hasRequestSended;
+
+    //QColor getColorByMetal(double metal);
+
 
 public:
     explicit Map(QWidget *parent = 0);
-    void drawMetalPoint(point);
+    void drawMetalPoint(MetalData md);
 
 
 
@@ -56,6 +78,9 @@ public slots:
     void startRequest(QUrl);
     void httpFinished();
     void httpReadyRead();
+
+    void removeAllPoints();
+    void networkError();
 
 
 };

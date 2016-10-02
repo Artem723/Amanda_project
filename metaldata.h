@@ -11,7 +11,7 @@ private:
     Coordinates coord;
     double metalDetectorValue;
     double precision;
-    bool empty;
+    //bool empty;
 
 public:
     MetalData();

@@ -9,10 +9,10 @@ Coordinates::Coordinates()
 
 Coordinates::Coordinates(double lat,double lon)
 {
-    if(lat<=0 || lat>90){qDebug() << "Error: Invalid input in \'Coordinates\' constructor: argument must be in the range from 0 to 90.\nInput number is "<< lat <<";";exit(1);}
+    if(lat<0 || lat>90){qDebug() << "Error: Invalid input in \'Coordinates\' constructor: argument must be in the range from 0 to 90.\nInput number is "<< lat <<";";exit(1);}
     this->latitude = lat;
 
-    if(lon<=0 || lon>180){qDebug() << "Error: Invalid input in \'Coordinates\' constructor: argument must be in the range from 0 to 180.\nInput number is "<< lon <<";";exit(1);}
+    if(lon<0 || lon>180){qDebug() << "Error: Invalid input in \'Coordinates\' constructor: argument must be in the range from 0 to 180.\nInput number is "<< lon <<";";exit(1);}
     this->longitude = lon;
 }
 
@@ -28,18 +28,19 @@ double Coordinates::getLon()
 
 void Coordinates::setLat(double lat)
 {
-    if(lat<=0 || lat>90){qDebug() << "Error: Invalid input in \'setLat\' function: argument must be in the range from 0 to 90.\nInput number is "<< lat <<";";exit(1);}
+    if(lat<0 || lat>90){qDebug() << "Error: Invalid input in \'setLat\' function: argument must be in the range from 0 to 90.\nInput number is "<< lat <<";";exit(1);}
     this->latitude = lat;
 }
 
 void Coordinates::setLon(double lon)
 {
-    if(lon<=0 || lon>180){qDebug() << "Error: Invalid input in \'setLon\' function: argument must be in the range from 0 to 180.\nInput number is "<< lon <<";";exit(1);}
+    if(lon<0 || lon>180){qDebug() << "Error: Invalid input in \'setLon\' function: argument must be in the range from 0 to 180.\nInput number is "<< lon <<";";exit(1);}
     this->longitude = lon;
 }
 
 void Coordinates::setLat(QString latStr)
 {
+    QString arg = latStr;
     bool gradLatConvIsOk, minLatConvIsOk;
     double grad_lat = latStr.left(2).toDouble(&gradLatConvIsOk);
     double min_lat = latStr.right(latStr.size()-2).toDouble(&minLatConvIsOk);
@@ -47,13 +48,14 @@ void Coordinates::setLat(QString latStr)
     grad_lat += min_lat/60;
     if(grad_lat<=0 || grad_lat>90 || !gradLatConvIsOk || !minLatConvIsOk)
     {
-        qDebug() << "Error: Invalid input in \'setLat(QString)\' function: input string is not correct!!! ";exit(1);
+        qDebug() << "Error: Invalid input in \'setLat(QString)\' function: input string is not correct!!! "<<"Input string: "<<arg<<"\n"<<"grad_lat: "<<grad_lat;exit(1);
     }
     this->latitude = grad_lat;
 }
 
 void Coordinates::setLon(QString lonStr)
 {
+  QString arg = lonStr;
   bool gradLonConvIsOk, minLonConvIsOk;
   double grad_lon = lonStr.left(3).toDouble(&gradLonConvIsOk);
   double min_lon = lonStr.right(lonStr.size()-3).toDouble(&minLonConvIsOk);
@@ -62,7 +64,7 @@ void Coordinates::setLon(QString lonStr)
 
   if(grad_lon<=0 || grad_lon>180 || !gradLonConvIsOk || !minLonConvIsOk)
   {
-      qDebug() << "Error: Invalid input in \'setLon(QString)\' function: input string is not correct!!! ";exit(1);
+      qDebug() << "Error: Invalid input in \'setLon(QString)\' function: input string is not correct!!!\nInput string: "<<arg<<"\n"<<"grad_lon: "<<grad_lon;exit(1);
   }
   this->longitude = grad_lon;
 

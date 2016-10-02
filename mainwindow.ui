@@ -86,7 +86,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Go!</string>
+     <string>Read from file</string>
     </property>
    </widget>
    <widget class="QWidget" name="gridLayoutWidget_2">

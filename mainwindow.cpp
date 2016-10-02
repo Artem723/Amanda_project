@@ -12,7 +12,6 @@
 #include<QListWidgetItem>
 #include<windows.h>
 
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -27,22 +26,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->horizontalLayout_3->addWidget(camView);
 
     connect(ui->action_2,SIGNAL(triggered()),this,SLOT(dialog()));
-//    point d[3];
-//    d[0].X=10000; //10
-//    d[0].Y=10000; //10
-//    d[0].color=610;
-
-//    d[1].X=10010; //30
-//    d[1].Y=10010; //45
-//    d[1].color=611;
-
-//    d[2].X=10090; //110
-//    d[2].Y=10090; //140
-//    d[2].color=612;
-//    clth->addDot(d[0]);
-//    clth->addDot(d[1]);
-//    clth->addDot(d[2]);
-//    clth->repaint();
     ui->label_2->setText(QString::number(ui->verticalSlider->value()));
     ui->horizontalSlider_3->setValue(10);
 
@@ -55,13 +38,18 @@ MainWindow::MainWindow(QWidget *parent) :
 //        ui->listWidget->addItem("&item");
         //QPalette pl;
 
-        ui->label_14->setStyleSheet("background-color:rgb(255,0,0);");
-        ui->label_15->setStyleSheet("background-color:rgb(255,0,0);");
-        ui->label->setStyleSheet("background-color:rgb(255,0,0);");
+    ui->label_14->setStyleSheet("background-color:rgb(255,0,0);");
+    ui->label_15->setStyleSheet("background-color:rgb(255,0,0);");
+    ui->label->setStyleSheet("background-color:rgb(255,0,0);");
 
-        sock_wheel = new QTcpSocket(this);
-        sock_metal = new QTcpSocket(this);
-        sock_camera = new QTcpSocket(this);
+    sock_wheel = new QTcpSocket(this);
+    sock_metal = new QTcpSocket(this);
+    sock_camera = new QTcpSocket(this);
+
+
+    map = new Map(this);
+
+
 
     connect(sock_wheel, SIGNAL(readyRead()), this, SLOT(onSock_Wheel_ReadyRead()));
     connect(sock_wheel, SIGNAL(connected()), this, SLOT(onSock_Wheel_Connected()));
@@ -85,10 +73,7 @@ MainWindow::MainWindow(QWidget *parent) :
     isConnect = false;
     zalip = false;
     countCamFile = 0;
-    map = NULL;
-
-
-
+    //map = NULL;
 
 
 }
@@ -322,10 +307,10 @@ void MainWindow::on_horizontalSlider_3_valueChanged(int value)
     clth->setHDOP(value);
 }
 
-double MainWindow::distance(double lat1,double lon1,double lat2,double lon2)
-{
+//double MainWindow::distance(double lat1,double lon1,double lat2,double lon2)
+//{
 
-}
+//}
 //кнопка list
 //void MainWindow::on_pushButton_3_clicked()
 //{
@@ -376,34 +361,34 @@ void MainWindow::dialog()
 ///
 void MainWindow::onSock_Wheel_Connected()
 {
-ui->label_14->setStyleSheet("background-color:rgb(0,255,0);");
-ui->connect_Button_Wheel->setText("disconnect");
-//разблокирываем кнопки управления
-ui->but_A->setEnabled(true);
-ui->but_D->setEnabled(true);
-ui->but_F->setEnabled(true);
-ui->but_R->setEnabled(true);
-ui->but_S->setEnabled(true);
-ui->but_W->setEnabled(true);
-ui->but_Q->setEnabled(true);
+    ui->label_14->setStyleSheet("background-color:rgb(0,255,0);");
+    ui->connect_Button_Wheel->setText("disconnect");
+    //разблокирываем кнопки управления
+    ui->but_A->setEnabled(true);
+    ui->but_D->setEnabled(true);
+    ui->but_F->setEnabled(true);
+    ui->but_R->setEnabled(true);
+    ui->but_S->setEnabled(true);
+    ui->but_W->setEnabled(true);
+    ui->but_Q->setEnabled(true);
 
-isConnect = true;
+    isConnect = true;
 
 }
 
 void MainWindow::onSock_Wheel_Disconnected()
 {
-ui->label_14->setStyleSheet("background-color:rgb(255,0,0);");
-ui->connect_Button_Wheel->setText("connect");
-ui->but_A->setEnabled(false);
-ui->but_D->setEnabled(false);
-ui->but_F->setEnabled(false);
-ui->but_R->setEnabled(false);
-ui->but_S->setEnabled(false);
-ui->but_W->setEnabled(false);
-ui->but_Q->setEnabled(false);
+    ui->label_14->setStyleSheet("background-color:rgb(255,0,0);");
+    ui->connect_Button_Wheel->setText("connect");
+    ui->but_A->setEnabled(false);
+    ui->but_D->setEnabled(false);
+    ui->but_F->setEnabled(false);
+    ui->but_R->setEnabled(false);
+    ui->but_S->setEnabled(false);
+    ui->but_W->setEnabled(false);
+    ui->but_Q->setEnabled(false);
 
-isConnect= false;
+    isConnect= false;
 }
 
 void MainWindow::onSock_Wheel_ReadyRead()
@@ -483,6 +468,11 @@ void MainWindow::onSock_Metal_ReadyRead()
 
     qDebug()<<dat;
     point p;
+    if(map->isVisible())//drow point on map, if it is visible
+    {
+
+        map->drawMetalPoint(MetalData(dat));
+    }
 
     p=this->gps_parser(dat);
     if(p.X!=0 && p.Y!=0)
@@ -778,7 +768,7 @@ point MainWindow::gps_parser(QString str)
 void MainWindow::on_action_3_triggered()
 {
     QMessageBox ms;
-    QString fileName = QFileDialog::getOpenFileName(this);
+    QString fileName = QFileDialog::getSaveFileName(this);
     if(fileName.isEmpty())
     {
         ms.setInformativeText("The file was not specified!");
@@ -961,7 +951,9 @@ void MainWindow::on_pushButton_2_clicked()
 
 void MainWindow::on_actionMap_triggered()
 {
-    map = new Map(this);
+
+    //map = new Map(this);
     map->show();
+
 
 }
