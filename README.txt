@@ -1,5 +1,5 @@
-It program has written in the Qt Framework.
-It is client application for working with robot.
+This program has been written in the Qt Framework and serves as a client app for remote control of the robot EXOBOT.
 
 ----
 Author: Artem Savchuk
+Licence: MIT
